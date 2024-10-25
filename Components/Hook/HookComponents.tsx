@@ -22,41 +22,47 @@ export default function HookComponents() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setStudents((students) => {
-                setContador( contador + 1); // Incrementar el contador
-                return students.map((student) => ({
-                    ...student,
-                    // solo actualizamos el contador
-                }));
-            });
+            const newStudent: Estudiante = {
+                id: students.length+1,
+                name: `Estudiante nombre ${students.length+1}`
+            };
+
+            setStudents(prevLista =>[...prevLista, newStudent]);
+
+            setContador(contador+1)
         }, 5000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [students]);
 
 
   return (
       <View>
-          <Text style={style.text}>Lista de Estudiantes</Text>
-          <Text style={style.text}>Actualizaciones: {contador}</Text>
-          <View style={style.table}>
+          <ScrollView>
+              <Text style={style.text}>Lista de Estudiantes</Text>
+              <Text style={style.text}>Actualizaciones: {contador}</Text>
+              <View style={style.table}>
 
-              <View style={style.header}>
-                  <Text style={style.headerText}>ID</Text>
-                  <Text style={style.headerText}>Nombre</Text>
+                  <View style={style.header}>
+                      <Text style={style.headerText}>ID</Text>
+                      <Text style={style.headerText}>Nombre</Text>
+                  </View>
+
+                  {students.map((student) => (
+                      <View key={student.id} style={style.row}>
+                          <Text style={style.cell}>{student.id}</Text>
+                          <Text style={style.cell}>{student.name}</Text>
+                      </View>
+                  ))}
+
+
               </View>
 
-              {students.map((student) => (
-                  <View key={student.id} style={style.row}>
-                      <Text style={style.cell}>{student.id}</Text>
-                      <Text style={style.cell}>{student.name}</Text>
-                  </View>
-              ))}
+          </ScrollView>
 
-
-          </View>
 
       </View>
+      
     
   )
 }
